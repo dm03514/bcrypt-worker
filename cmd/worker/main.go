@@ -10,6 +10,7 @@ import (
 	"log"
 	"github.com/dm03514/bcrypt-worker/decrypt"
 	"encoding/json"
+	"flag"
 )
 
 var (
@@ -57,9 +58,12 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	numDecryptPoolWorkers := flag.Int("num-decrypt-pool-workers", 4, "")
+	flag.Parse()
+
 	fmt.Printf("starting_server: :8080\n")
 	http.Handle("/decrypt", Handler{
-		DecrypterPool: decrypt.NewPool(4),
+		DecrypterPool: decrypt.NewPool(*numDecryptPoolWorkers),
 	})
 	http.Handle("/metrics", promhttp.Handler())
 	log.Fatal(http.ListenAndServe(":8080", nil))

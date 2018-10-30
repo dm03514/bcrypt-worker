@@ -2,7 +2,6 @@ package decrypt
 
 import (
 	"github.com/prometheus/client_golang/prometheus"
-	"runtime"
 )
 
 var (
@@ -46,8 +45,6 @@ func NewPool(numWorkers int) *Pool {
 
 	for i:=0; i < numWorkers; i++ {
 		go func() {
-			runtime.LockOSThread()
-
 			for work := range inputChan {
 				work.outputChan <- work.bcrypter.IsMatch()
 			}
