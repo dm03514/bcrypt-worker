@@ -59,7 +59,7 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func main() {
 	fmt.Printf("starting_server: :8080\n")
 	http.Handle("/decrypt", Handler{
-		DecrypterPool: decrypt.NewPool(2),
+		DecrypterPool: decrypt.NewPool(4),
 	})
 	http.Handle("/metrics", promhttp.Handler())
 	log.Fatal(http.ListenAndServe(":8080", nil))

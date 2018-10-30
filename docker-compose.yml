@@ -13,7 +13,7 @@ services:
     volumes:
      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
     command: "--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus"
-    network_mode: host
+    # network_mode: host
     ports:
      - 9090:9090
     depends_on:

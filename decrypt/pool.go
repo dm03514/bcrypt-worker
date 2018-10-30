@@ -1,6 +1,9 @@
 package decrypt
 
-import "github.com/prometheus/client_golang/prometheus"
+import (
+	"github.com/prometheus/client_golang/prometheus"
+	"runtime"
+)
 
 var (
 	decrypterPoolQueued = prometheus.NewGauge(prometheus.GaugeOpts{
@@ -16,30 +19,43 @@ func init() {
 // DecrypterPool handles scheduling decryption to respect hard bounds such as Number of CPU
 // cores.
 type Pool struct {
-	NumWorkers int
-	sem chan struct{}
+	numWorkers int
+	inputChan chan workerRequest
 }
 
 func (p *Pool) IsMatch(b Bcrypter) bool {
-	out := make(chan bool)
-	go func() {
-		// increment the waiting counter
-		decrypterPoolQueued.Inc()
-		p.sem <- struct{}{}
-		defer func() {
-			<-p.sem
-		}()
-		decrypterPoolQueued.Dec()
+	work := workerRequest{
+		bcrypter: b,
+		outputChan: make(chan bool),
+	}
+	decrypterPoolQueued.Inc()
+	p.inputChan <- work
+	decrypterPoolQueued.Dec()
 
-		out <- b.IsMatch()
-		// do the decryption and write to out
-	}()
-	return <-out
+	return <-work.outputChan
+}
+
+type workerRequest struct {
+	bcrypter Bcrypter
+	outputChan chan bool
 }
 
 func NewPool(numWorkers int) *Pool {
+	// Create a goroutine per entry
+	inputChan := make(chan workerRequest)
+
+	for i:=0; i < numWorkers; i++ {
+		go func() {
+			runtime.LockOSThread()
+
+			for work := range inputChan {
+				work.outputChan <- work.bcrypter.IsMatch()
+			}
+		}()
+	}
+
 	return &Pool{
-		NumWorkers: numWorkers,
-		sem: make(chan struct{}, numWorkers),
+		numWorkers: numWorkers,
+		inputChan: inputChan,
 	}
 }
