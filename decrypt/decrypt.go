@@ -1,10 +1,10 @@
 package decrypt
 
 import (
-	"golang.org/x/crypto/bcrypt"
 	"github.com/prometheus/client_golang/prometheus"
-	"time"
+	"golang.org/x/crypto/bcrypt"
 	"strconv"
+	"time"
 )
 
 var (
@@ -20,7 +20,7 @@ func init() {
 
 type Bcrypter struct {
 	HashedPassword string
-	Password string
+	Password       string
 }
 
 func (b Bcrypter) IsMatch() bool {
@@ -30,5 +30,3 @@ func (b Bcrypter) IsMatch() bool {
 	decryptionTimeSeconds.WithLabelValues(strconv.FormatBool(result)).Observe(diff.Seconds())
 	return result
 }
-
-

@@ -1,6 +1,13 @@
 LOAD_TEST_RATE=50
 LOAD_TEST_TARGET=http://localhost:8080
 WORKER_NUM_DECRYPTERS=4
+PKGS = $(shell go list ./... | grep -v /vendor/)
+
+fmt:
+	go fmt $(PKGS)
+
+test-unit:
+	go test $(PKGS) -v
 
 stack:
 	WORKER_NUM_DECRYPTERS=$(WORKER_NUM_DECRYPTERS) \
@@ -9,4 +16,4 @@ stack:
 load-test:
 	echo "POST $(LOAD_TEST_TARGET)/decrypt" | vegeta attack -body tests/fixtures/password_no_match.json -rate=$(LOAD_TEST_RATE) -duration=0 | tee results.bin | vegeta report
 
-.PHONY: stack load-test
+.PHONY: stack load-test fmt test-unit

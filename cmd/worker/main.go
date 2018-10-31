@@ -1,16 +1,16 @@
 package main
 
 import (
-	"github.com/prometheus/client_golang/prometheus"
-	"time"
-	"net/http"
+	"encoding/json"
+	"flag"
 	"fmt"
+	"github.com/dm03514/bcrypt-worker/decrypt"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"html"
 	"log"
-	"github.com/dm03514/bcrypt-worker/decrypt"
-	"encoding/json"
-	"flag"
+	"net/http"
+	"time"
 )
 
 var (

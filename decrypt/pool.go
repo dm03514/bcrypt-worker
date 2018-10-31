@@ -15,16 +15,16 @@ func init() {
 	prometheus.MustRegister(decrypterPoolQueued)
 }
 
-// DecrypterPool handles scheduling decryption to respect hard bounds such as Number of CPU
+// Pool handles scheduling decryption to respect hard bounds such as Number of CPU
 // cores.
 type Pool struct {
 	numWorkers int
-	inputChan chan workerRequest
+	inputChan  chan workerRequest
 }
 
 func (p *Pool) IsMatch(b Bcrypter) bool {
 	work := workerRequest{
-		bcrypter: b,
+		bcrypter:   b,
 		outputChan: make(chan bool),
 	}
 	decrypterPoolQueued.Inc()
@@ -35,15 +35,14 @@ func (p *Pool) IsMatch(b Bcrypter) bool {
 }
 
 type workerRequest struct {
-	bcrypter Bcrypter
+	bcrypter   Bcrypter
 	outputChan chan bool
 }
 
 func NewPool(numWorkers int) *Pool {
-	// Create a goroutine per entry
 	inputChan := make(chan workerRequest)
 
-	for i:=0; i < numWorkers; i++ {
+	for i := 0; i < numWorkers; i++ {
 		go func() {
 			for work := range inputChan {
 				work.outputChan <- work.bcrypter.IsMatch()
@@ -53,6 +52,6 @@ func NewPool(numWorkers int) *Pool {
 
 	return &Pool{
 		numWorkers: numWorkers,
-		inputChan: inputChan,
+		inputChan:  inputChan,
 	}
 }
