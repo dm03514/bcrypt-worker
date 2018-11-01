@@ -33,7 +33,7 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	defer func() {
 		diff := time.Since(start)
-		fmt.Fprintf(w, "Took: %s\n", diff)
+		// fmt.Fprintf(w, "Took: %s\n", diff)
 		requestLatency.WithLabelValues(html.EscapeString(r.URL.Path)).Observe(diff.Seconds())
 	}()
 
