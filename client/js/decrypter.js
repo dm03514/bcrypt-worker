@@ -2,8 +2,13 @@ var rp = require('request-promise');
 
 
 class CompareResult {
-    constructor(match) {
-        this.match = match;
+    constructor(result) {
+        console.log("CompareResult.constructor: ", result);
+        if (!result.hasOwnProperty("Match")) {
+            throw Error("object requires 'match' property, received: " + JSON.stringify(result));
+        }
+        this.match = result.Match;
+        this.result = result;
     }
 }
 
@@ -42,27 +47,17 @@ class Client {
     }
 
     /*
-        Compare returns a promise for a comparison
+        TODO - Compare returns a promise for a comparison
         result.  Will raise error on any non 200 status
         code.
     */
-    compare(plainTextPassword, hash) {
-        return new Promise((resolve, reject) => {
-            this.transport.makeRequest(this.transport.buildRequest(plainTextPassword, hash))
-                .then(function(result) {
-                    // resolve with a CompareResult as an adapter
-                    // instead of returning the response from the API directly
-                    if (!result.hasOwnProperty("Match")) {
-                        throw "object requires 'match' property, received: " + JSON.stringify(result);
-                    }
-                    return resolve(
-                        new CompareResult(result.Match)
-                    )
-                })
-                .catch(function(err) {
-                    return reject(err)
-                });
-        })
+    async compare(plainTextPassword, hash) {
+        let result = await this.transport.makeRequest(
+            this.transport.buildRequest(plainTextPassword, hash)
+        );
+        console.log("Client.compare result: ", result);
+
+        return new CompareResult(result);
     }
 }
 

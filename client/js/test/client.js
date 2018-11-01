@@ -2,74 +2,59 @@ const assert = require('assert');
 const decrypter = require('./../decrypter.js');
 
 
-class StubSuccessTransport {
-    constructor(resolveVal) {
-        this.resolveVal = resolveVal;
+class StubTransport {
+    constructor(returnPromise) {
+        this.returnPromise = returnPromise;
     }
 
     buildRequest(plainTextPassword, hash) {}
 
     makeRequest(req) {
-        return new Promise((resolve, reject) => {
-            resolve(this.resolveVal);
-        })
-    }
-}
-
-class StubRejectTransport {
-    constructor(val) {
-        this.val = val;
-    }
-
-    buildRequest(plainTextPassword, hash) {}
-
-    makeRequest(req) {
-        return new Promise((resolve, reject) => {
-            reject(this.val);
-        })
+        return this.returnPromise;
     }
 }
 
 describe('Client', function() {
     describe('compare()', function() {
-        it('should resolve a compare result when successful', function() {
+        it('should resolve a compare result when successful', async function() {
             let c = new decrypter.Client(
-                new StubSuccessTransport({
-                    Match: false,
-                })
+                new StubTransport(
+                    new Promise((resolve, reject) => {
+                        resolve(
+                            {
+                                Match: false,
+                            }
+                        )
+                    })
+                )
             );
-            return c.compare("plainTextPassword", "hash")
-            .then(function(result) {
-                assert.equal(result.match, false);
-            })
-            .catch(function(err) {
-                assert.fail("no error expected, received: " + err);
-            })
+            let result = await c.compare("plainTextPassword", "hash");
+            assert.equal(result.match, false);
         });
 
-        it('should reject an error when CompareResult parsing is invalid', function() {
+        it('should reject an error when CompareResult parsing is invalid', async function() {
             let c = new decrypter.Client(
-                new StubSuccessTransport({
-                    INVALID_KEY: true,
-                })
+                new StubTransport(
+                    new Promise((resolve, reject) => {
+                        resolve(
+                            {
+                                INVALID_KEY: true,
+                            }
+                        )
+                    })
+                )
             );
-            return c.compare("plainTextPassword", "hash")
-            .catch(function(err) {
-                assert.equal("object requires 'match' property, received: {\"INVALID_KEY\":true}", err);
-            })
+            let errCalled = false;
+            try {
+                await c.compare("plainTextPassword", "hash");
+            } catch (err) {
+                assert.equal("Error: object requires 'match' property, received: {\"INVALID_KEY\":true}", err);
+                errCalled = true;
+            } finally {
+                assert.ok(errCalled);
+            }
         });
 
-        it('should reject an error when an a transport error is encountered', function() {
-            let c = new decrypter.Client(
-                new StubRejectTransport({
-                    REJECTED: "REJECTED",
-                })
-            );
-            return c.compare("plainTextPassword", "hash")
-                .catch(function(err) {
-                    assert.deepEqual({ REJECTED: 'REJECTED' }, err);
-                })
-        });
-
+        xit('should reject an error when an a transport error is encountered', function() {});
     });
 });
