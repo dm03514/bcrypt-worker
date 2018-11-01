@@ -1,6 +1,6 @@
 LOAD_TEST_RATE=50
 LOAD_TEST_TARGET=http://localhost:8080
-WORKER_NUM_DECRYPTERS=4
+WORKER_NUM_DECRYPTERS:=4
 PKGS = $(shell go list ./... | grep -v /vendor/)
 
 fmt:

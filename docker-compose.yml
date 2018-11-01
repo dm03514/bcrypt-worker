@@ -38,3 +38,13 @@ services:
      - 3000:3000
     depends_on:
       - prom
+
+  cloudprober:
+    image: cloudprober/cloudprober
+    ports:
+      - 9313:9313
+    volumes:
+      - ./config/cloudprober/worker.cfg:/etc/cloudprober.cfg
+    depends_on:
+      - prom
+      - bcryptworker
