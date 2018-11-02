@@ -40,7 +40,7 @@ Note: Unnecessary use of -X or --request, POST is already inferred.
 ### Observability
 The bcrypt worker comes with a prometheus dashboard and is accessible @`localhost:3000` when using `make stack`.
 
-
+<img width="1313" alt="screen shot 2018-10-30 at 8 04 45 pm" src="https://user-images.githubusercontent.com/321963/47945296-5fb78e00-ded7-11e8-9006-cd7675ef3d24.png">
 
 This includes a number of metrics which should allow for the operation of the worker service and actionable metrics which should help identify and alert when key SLOs (avaialbility, latency) are being violated.
 
