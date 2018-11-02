@@ -45,8 +45,26 @@ The bcrypt worker comes with a prometheus dashboard and is accessible @`localhos
 This includes a number of metrics which should allow for the operation of the worker service and actionable metrics which should help identify and alert when key SLOs (avaialbility, latency) are being violated.
 
 #### Launch a load test
+In order to understand the performance of thew worker service a load test can be executed with:
+
+```
+$ make load-test LOAD_TEST_RATE=20
+echo "POST http://localhost:8080/decrypt" | vegeta attack -body tests/fixtures/password_no_match.json -rate=20 -duration=0 | tee results.bin | vegeta report
+Requests      [total, rate]            4337, 20.00
+Duration      [total, attack, wait]    3m36.864626198s, 3m36.801482041s, 63.144157ms
+Latencies     [mean, 50, 95, 99, max]  66.720569ms, 65.657269ms, 72.371326ms, 82.587951ms, 114.292254ms
+Bytes In      [total, mean]            138320, 31.89
+Bytes Out     [total, mean]            446711, 103.00
+Success       [ratio]                  100.00%
+Status Codes  [code:count]             200:4337
+Error Set:
+```
+(the load test was used to generate the metric screenshots above)
 
 ### Availability (Service Health)
+In order to determine if the service is availble an HTTP probe is being executed at a 1 minute interval:
+
+![screen shot 2018-11-01 at 3 58 09 pm](https://user-images.githubusercontent.com/321963/47885866-88735100-de0d-11e8-9e93-1f15df135179.png)
 
 
 ### SLO 
