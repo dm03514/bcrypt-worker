@@ -96,5 +96,13 @@ When the CPUs become saturated the HTTP connections will begin to queue.  The de
 - The decrypter pool queue should be flatline at 0, if not that means that clients are waiting on the pool to hash their requests, we discussed a couple of strategies to deal with this:
   - Shed load whenever the pool is saturated and return 429 status code:
   ```
+  select {
+  case:
+    p.inputChan <- work
+  default:
+    fmt.Println("Channel Saturated!!! Return something to alert client!")
+  }
   ```
+  - We could then have a retry/backoff in the client on 429.  This could allow for the majority of server latencies to remain  steady at the expense of some clients being aborted and being forced to retry.
+  
 
