@@ -69,6 +69,9 @@ In order to determine if the service is availble an HTTP probe is being executed
 
 ### SLO 
 All requests complete < 100ms.
+- Availabibilty
+   - 
+The HTTP Request 
 
 
 ### Running the Tests
