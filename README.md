@@ -66,22 +66,35 @@ In order to determine if the service is availble an HTTP probe is being executed
 
 ![screen shot 2018-11-01 at 3 58 09 pm](https://user-images.githubusercontent.com/321963/47885866-88735100-de0d-11e8-9e93-1f15df135179.png)
 
-
 ### SLO 
 - All requests complete < 100ms.
   - In order to monitor the duration each HTTP request is measured 
   - We can then alert if any are > 100ms 
   - <img width="626" alt="screen shot 2018-11-02 at 7 43 11 pm" src="https://user-images.githubusercontent.com/321963/47945341-9e4d4880-ded7-11e8-81ad-faaf9e8d24f4.png">
   
-- Availabibilty
-   - 
-The HTTP Request 
+- Availabilty
+   - Cloudprober is configured to make a request every 1 minute (very much like a local pingdom/new relic synthetics)
+   - The availability is calculated and displayed as a metric on the dashboard:
+   - <img width="731" alt="screen shot 2018-11-02 at 7 47 19 pm" src="https://user-images.githubusercontent.com/321963/47945420-46631180-ded8-11e8-920a-fd7d27801bb8.png">
+   - This should allow us to model the availability in terms of 9's and alert accordingly
 
+### Running Tests
+- The server has unit tests written in go and executable with:
+```
 
-### Running the Tests
-
+```
 
 ## Using the JS Client
 
 
-## Performance
+## Performance/Operation
+
+### Hasher Pool
+- Since hashing is CPU bound the worker is limited by the number of CPU's available to it.  
+When the CPUs become saturated the HTTP connections will begin to queue.  The decrypter Pool queue is exposed as a prometheus metric and is available on the dashboard:
+- <img width="629" alt="screen shot 2018-11-02 at 7 53 25 pm" src="https://user-images.githubusercontent.com/321963/47945542-10725d00-ded9-11e8-99a2-3ccb298b9916.png">
+- The decrypter pool queue should be flatline at 0, if not that means that clients are waiting on the pool to hash their requests, we discussed a couple of strategies to deal with this:
+  - Shed load whenever the pool is saturated and return 429 status code:
+  ```
+  ```
+
