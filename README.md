@@ -70,7 +70,9 @@ In order to determine if the service is availble an HTTP probe is being executed
 ### SLO 
 - All requests complete < 100ms.
   - In order to monitor the duration each HTTP request is measured 
-  - We can then alert if any 
+  - We can then alert if any are > 100ms 
+  - <img width="626" alt="screen shot 2018-11-02 at 7 43 11 pm" src="https://user-images.githubusercontent.com/321963/47945341-9e4d4880-ded7-11e8-81ad-faaf9e8d24f4.png">
+  
 - Availabibilty
    - 
 The HTTP Request 
