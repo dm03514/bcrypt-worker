@@ -9,9 +9,12 @@ An HTTP server to hash passwords using [bcrypt](https://en.wikipedia.org/wiki/Bc
 $ make stack
 ```
 
+### Check a password
+
 
 ### Observability
 
+#### Launch a load test
 
 ### Availability (Service Health)
 
