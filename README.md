@@ -88,6 +88,7 @@ In order to determine if the service is availble an HTTP probe is being executed
 
 ### Running Tests
 - The server has unit tests written in go and executable with:
+
 ```
 $ make test-unit
 go test github.com/dm03514/bcrypt-worker/cmd/worker github.com/dm03514/bcrypt-worker/decrypt -v
@@ -105,7 +106,7 @@ ok      github.com/dm03514/bcrypt-worker/decrypt        (cached)
 ## Using the JS Client
 - Start a stack following the directions above
 - Execute the client through the bundled `cli.js` interface:
-  ```
+```
   bcrypt-worker/client/js$ nodejs --version
 v10.13.0
   bcrypt-worker/client/js$ nodejs cli.js -w http://localhost:8080/decrypt -p nomatch -h $2b$10$//DXiVVE59p7G5k/4Klx/ezF7BI42QZKmoOD0NDvUuqxRE5bFFBLy
@@ -113,7 +114,8 @@ v10.13.0
   password: 'nomatch',
   hash: 'b0$//DXiVVE59p7G5k/4Klx/ezF7BI42QZKmoOD0NDvUuqxRE5bFFBLy' }
 success:  CompareResult { match: false }
-  ```
+```
+  
 ### Executing Unit Tests:
 ```
 bcrypt-worker/client/js$ make test-unit
@@ -133,7 +135,6 @@ CompareResult.constructor:  { INVALID_KEY: true }
 
   2 passing (10ms)
   1 pending
-
 ```
 
 ## Performance/Operation
