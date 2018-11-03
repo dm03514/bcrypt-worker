@@ -43,6 +43,14 @@ The bcrypt worker comes with a prometheus dashboard and is accessible @`localhos
 <img width="1313" alt="screen shot 2018-10-30 at 8 04 45 pm" src="https://user-images.githubusercontent.com/321963/47945296-5fb78e00-ded7-11e8-9006-cd7675ef3d24.png">
 
 This includes a number of metrics which should allow for the operation of the worker service and actionable metrics which should help identify and alert when key SLOs (avaialbility, latency) are being violated.
+Ther metrics included are:
+- Availability from probe results (covered later)
+- Rate of HTTP Requests
+- Duration of HTTP Requests
+- Rate & Result (match|nomatch) of bcrypt hashing
+- Latency of bcrypt hashing
+- Decrypter Pool Queue Saturation
+- System / Goruntime metrics
 
 #### Launch a load test
 In order to understand the performance of thew worker service a load test can be executed with:
@@ -81,7 +89,17 @@ In order to determine if the service is availble an HTTP probe is being executed
 ### Running Tests
 - The server has unit tests written in go and executable with:
 ```
-
+$ make test-unit
+go test github.com/dm03514/bcrypt-worker/cmd/worker github.com/dm03514/bcrypt-worker/decrypt -v
+?       github.com/dm03514/bcrypt-worker/cmd/worker     [no test files]
+=== RUN   TestBcrypter_IsMatch_NoMatch
+--- PASS: TestBcrypter_IsMatch_NoMatch (0.07s)
+=== RUN   TestBcrypter_IsMatch_True
+--- PASS: TestBcrypter_IsMatch_True (0.14s)
+=== RUN   TestPool_IsMatch_FalseNoMatch
+--- PASS: TestPool_IsMatch_FalseNoMatch (0.08s)
+PASS
+ok      github.com/dm03514/bcrypt-worker/decrypt        (cached)
 ```
 
 ## Using the JS Client
