@@ -103,7 +103,38 @@ ok      github.com/dm03514/bcrypt-worker/decrypt        (cached)
 ```
 
 ## Using the JS Client
+- Start a stack following the directions above
+- Execute the client through the bundled `cli.js` interface:
+  ```
+  bcrypt-worker/client/js$ nodejs --version
+v10.13.0
+  bcrypt-worker/client/js$ nodejs cli.js -w http://localhost:8080/decrypt -p nomatch -h $2b$10$//DXiVVE59p7G5k/4Klx/ezF7BI42QZKmoOD0NDvUuqxRE5bFFBLy
+{ workerAddr: 'http://localhost:8080/decrypt',
+  password: 'nomatch',
+  hash: 'b0$//DXiVVE59p7G5k/4Klx/ezF7BI42QZKmoOD0NDvUuqxRE5bFFBLy' }
+success:  CompareResult { match: false }
+  ```
+### Executing Unit Tests:
+```
+bcrypt-worker/client/js$ make test-unit
+./node_modules/mocha/bin/mocha
 
+
+  Client
+    compare()
+Client.compare result:  { Match: false }
+CompareResult.constructor:  { Match: false }
+      ✓ should resolve a compare result when successful
+Client.compare result:  { INVALID_KEY: true }
+CompareResult.constructor:  { INVALID_KEY: true }
+      ✓ should reject an error when CompareResult parsing is invalid
+      - should reject an error when an a transport error is encountered
+
+
+  2 passing (10ms)
+  1 pending
+
+```
 
 ## Performance/Operation
 
