@@ -156,3 +156,10 @@ When the CPUs become saturated the HTTP connections will begin to queue.  The de
   - We could then have a retry/backoff in the client on 429.  This could allow for the majority of server latencies to remain  steady at the expense of some clients being aborted and being forced to retry.
   
 
+## 0 Downtime Deploys
+
+
+## Spreading Workload
+- Could be accomplished through load balancing over all the bcrypt worker instances
+- Bcrypt worker instances are stateless and lend extremely well to horizontal scaling
+- Additionally, CPU usage is a great signal for autoscaling of these workers
