@@ -154,10 +154,17 @@ When the CPUs become saturated the HTTP connections will begin to queue.  The de
   }
   ```
   - We could then have a retry/backoff in the client on 429.  This could allow for the majority of server latencies to remain  steady at the expense of some clients being aborted and being forced to retry.
-  
 
 ## 0 Downtime Deploys
-
+- Amazon Load Balancing policy could be used to accomplish this in a blue/green variant ("expand/contract")
+- Deployment takes places
+- New version is brought up along side the old version (both behind the LB)
+- Wait until new version health checks pass
+- New Version is registerd with LB for traffic
+- Old version begins draining
+  - No new connections to old version
+  - Draining timeout (300seconds default) after which old version is killed
+- New version is now accepting all traffic
 
 ## Spreading Workload
 - Could be accomplished through load balancing over all the bcrypt worker instances
